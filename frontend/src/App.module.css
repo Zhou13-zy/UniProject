@@ -1,0 +1,277 @@
+.app {
+  background-color:#eefcff;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+.home {
+  align-items: center;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  padding-top: 150px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+
+span .navItem {
+  color: black;
+  background-color: rgba(0,0,0,0);
+  border: 1px solid rgba(0,0,0,0);
+  border-radius: 3px;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 20px;
+  margin: 0 20px;
+  text-decoration: none;
+}
+
+.navbarAvatar {
+  text-decoration: none;
+}
+
+span .navItem:hover {
+  border: 1px solid #8AC007;
+  background-color: #eefcff;
+  border-radius: 25px;
+}
+
+.logoutBtn {
+  padding: 10px 20px;
+  margin: 0 20px;
+}
+
+.homepageSpan {
+  width: 100%;
+  padding-top: 100px;
+  display: flex;
+  justify-content: center;
+}
+
+.hpSubmitBtn {
+  margin-top: 30px;
+}
+
+
+.authForm {
+  background-color: white;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgb(102, 196, 210);
+  border-radius: 30px;
+  margin: auto auto;
+  padding: 50px;
+  text-align: center;
+  min-width: 500px;
+}
+
+.navBar {
+  background-color: floralwhite;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px;
+  position: fixed;
+  top: 0;
+}
+
+.icon {
+  height: 50px;
+  width: 100px;
+}
+
+.regoRedirectLink {
+  color: #1876d1;
+  background-color: rgba(0,0,0,0);
+  border: 1px solid rgba(0,0,0,0);
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+.profileBody {
+  width: 100%;
+  height: 100%;
+}
+
+.profileWholeScreen {
+  display: flex;
+  flex-direction: column;
+}
+
+.profileMainBox {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 73.5px;
+}
+
+.profileUpBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 35%;
+  width: 100%;
+}
+
+.detailsCard {
+  flex: 2;
+  width: 100%;
+  padding-left: 100px;
+  padding-top: 10px;
+}
+
+.profileLogo {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+}
+
+.logoSize {
+  height: 100px;
+  width: 220px;
+}
+
+.searchBarTasksBox{
+  display: flex;
+  align-items: flex-end;
+  flex: 1;
+  height: 20vh;
+}
+
+.searchBarTasks{
+  display: flex;
+}
+
+.rightButton {
+  display: flex;
+  justify-content: flex-end;
+  padding: 30px 20px 0 20px;
+  width: 100%;
+}
+
+.assigneeDropdown {
+  padding-top: 15px;
+}
+
+.dashboard {
+  overflow: hidden;
+}
+
+.columns {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+
+.boardColumns {
+  border: 1px solid rgba(39, 159, 129, 0.669);
+  border-radius: 5px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.item {
+  padding: 1em;
+  margin: 1em;
+  width: 300px;
+  border-top: 4px solid green;
+  border-radius: 5px;
+  height: 100px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.columnHeading {
+  border-bottom: 1px solid lightgray;
+  padding: 20px;
+}
+
+.addNew { 
+  padding: 1em;
+  margin: 1em;
+  width: 380px;
+  border: 1px solid white;
+  background-color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.8);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: auto;
+}
+
+.modalWrapper {
+  height: 30%;    
+  width: 30%;
+  background: white;
+  position: relative;
+  /*z-index: 10;*/
+}
+
+.m1 {
+  margin: 1em;
+}
+
+.mtl2 {
+  margin-top: 2em;
+  margin-left: 2em;
+}
+
+.mt0 {
+  margin-top: 0px;
+}
+
+.m2 {
+  margin: 2em;
+  margin-top: 0.5em;
+}
+
+.p1 {
+  margin: 1em;
+}
+
+.modalWrapper .actionButtons {
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.actionButtons > button {
+  width: 60px;
+  height: 30px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid gray;
+}
+
+.actionButtons .save {
+  background: green;
+  color: white;
+}
+
+.actionButtons .cancel {
+  background: white;
+}
