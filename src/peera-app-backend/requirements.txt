@@ -1,0 +1,9 @@
+Flask
+Jinja2
+Flask-RESTful
+jsonschema
+six
+flask_cors
+datetime
+sqlite3
+jwt

@@ -1,0 +1,1947 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Task Management System",
+    "version": "1.0.0",
+    "title": "Peera",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "anshulbindal@live.in"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "basePath": "/v1",
+  "tags": [
+    {
+      "name": "user",
+      "description": "Register and Login"
+    },
+    {
+      "name": "connections",
+      "description": "Request and Manage Connections"
+    },
+    {
+      "name": "search",
+      "description": "Search function"
+    },
+    {
+      "name": "task",
+      "description": "Create and manage task"
+    },
+    {
+      "name": "project",
+      "description": "Manage Project and members"
+    },
+    {
+      "name": "workload",
+      "description": "User Capacity and Workload"
+    }
+  ],
+  "paths": {
+    "/user": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Returns user from userid",
+        "description": "Takes a userid, returns specific user",
+        "operationId": "returnUser",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "ID of the user that needs to be retrieved",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/User"
+                },
+                {
+                  "$ref": "#/definitions/OK"
+                }
+              ]
+            }
+          },
+          "404": {
+            "description": "No User found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          }
+        }
+      }
+    },
+    "/user/register": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Register New User",
+        "description": "This endpoint is used to create a record for a new user",
+        "operationId": "registerUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User Created",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/User"
+                },
+                {
+                  "$ref": "#/definitions/Created"
+                }
+              ]
+            }
+          },
+          "400": {
+            "description": "Invalid username/password supplied",
+            "schema": {
+              "$ref": "#/definitions/Invalid"
+            }
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Login for existing users",
+        "description": "Logs user into the system",
+        "operationId": "loginUser",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "description": "The user name for login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "The password for login",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Token"
+                },
+                {
+                  "$ref": "#/definitions/Created"
+                }
+              ]
+            }
+          },
+          "400": {
+            "description": "Invalid username/password supplied",
+            "schema": {
+              "$ref": "#/definitions/Invalid"
+            }
+          }
+        }
+      }
+    },
+    "/user/logout": {
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Logs out current logged in user session",
+        "description": "",
+        "operationId": "logoutUser",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "description": "Token for deletion",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/OK"
+                }
+              ]
+            }
+          },
+          "400": {
+            "description": "Invalid username/password supplied",
+            "schema": {
+              "$ref": "#/definitions/Invalid"
+            }
+          }
+        }
+      }
+    },
+    "/user/validate_token": {
+      "put": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Check if user is logged in",
+        "description": "Validate if user has an active token",
+        "operationId": "validateToken",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "description": "The token to be validated",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Token"
+                },
+                {
+                  "$ref": "#/definitions/Created"
+                }
+              ]
+            }
+          },
+          "400": {
+            "description": "Invalid token supplied",
+            "schema": {
+              "$ref": "#/definitions/Invalid"
+            }
+          }
+        }
+      }
+    },
+    "/request": {
+      "get": {
+        "tags": [
+          "connections"
+        ],
+        "summary": "Returns pending requests for a user",
+        "description": "Returns all pending requests for a user ID",
+        "operationId": "returnRequest",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "ID of the user that a request is sent to, pending approvals for that user",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ArrayOfRequests"
+            }
+          },
+          "404": {
+            "description": "No Requests found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "connections"
+        ],
+        "summary": "Send user connection",
+        "description": "This endpoint is used to send connection request to user",
+        "operationId": "sendConnectionRequest",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "requestTo",
+            "in": "query",
+            "description": "User the invite to be sent to - email",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "requestFrom",
+            "in": "query",
+            "description": "User the invite is sent from - username",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "request successfully created",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Request"
+                },
+                {
+                  "$ref": "#/definitions/Created"
+                }
+              ]
+            }
+          },
+          "405": {
+            "description": "request unsuccessful as user is already added",
+            "schema": {
+              "$ref": "#/definitions/NotAllowed"
+            }
+          },
+          "400": {
+            "description": "Connection Request Already Sent",
+            "schema": {
+              "$ref": "#/definitions/Invalid"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "connections"
+        ],
+        "summary": "Respond to connection request",
+        "description": "Approve or ignore connection request",
+        "operationId": "updateConnectionRequest",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "query",
+            "description": "ID of the request that needs to be updated",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Approve or Ignore Project Invite",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "request successfully updated",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Request"
+                },
+                {
+                  "$ref": "#/definitions/OK"
+                }
+              ]
+            }
+          },
+          "405": {
+            "description": "request unsuccessful as user is already added",
+            "schema": {
+              "$ref": "#/definitions/NotAllowed"
+            }
+          }
+        }
+      }
+    },
+    "/connection": {
+      "get": {
+        "tags": [
+          "connections"
+        ],
+        "summary": "Returns connections of a user",
+        "description": "Returns connections and checks if two users are connected",
+        "operationId": "returnConnections",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "ID of the user to fetch list of connections for",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "connectedUserId",
+            "in": "query",
+            "description": "ID of the user that a request is sent to, pending approvals for that user",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ArrayOfConnections"
+            }
+          },
+          "404": {
+            "description": "Connection Not Found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "connections"
+        ],
+        "summary": "Deletes user connection",
+        "description": "Delete a connection between two users",
+        "operationId": "deleteConnection",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "ID of the user requesting deletion",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "connectedUserId",
+            "in": "query",
+            "description": "ID of the user that the connection needs to be removed for",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/OK"
+                }
+              ]
+            }
+          },
+          "404": {
+            "description": "Member not found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          }
+        }
+      }
+    },
+    "/search": {
+      "get": {
+        "tags": [
+          "search"
+        ],
+        "summary": "Search",
+        "description": "Wild card search for existing users and tasks",
+        "operationId": "searchUser",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "description": "search query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "numUsers": {
+                      "type": "integer",
+                      "format": "int32",
+                      "example": 20,
+                      "description": "Size of the resultant users array"
+                    },
+                    "numTasks": {
+                      "type": "integer",
+                      "format": "int32",
+                      "example": 20,
+                      "description": "Size of the resultant tasks array"
+                    },
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/User"
+                      }
+                    },
+                    "tasks": {
+                      "$ref": "#/definitions/ArrayOfTasks"
+                    }
+                  }
+                },
+                {
+                  "$ref": "#/definitions/OK"
+                }
+              ]
+            }
+          },
+          "404": {
+            "description": "No Users found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          }
+        }
+      }
+    },
+    "/members": {
+      "get": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Returns members of a Project",
+        "description": "Returns all members of project for which the project id is supplied",
+        "operationId": "returnMembers",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "query",
+            "description": "ID of the project for which members needs to be retrieved",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ArrayOfProjectMembers"
+            }
+          },
+          "404": {
+            "description": "No Members found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Add a new member to a project",
+        "description": "This endpoint is used to add a new member to a project",
+        "operationId": "createMember",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "query",
+            "description": "ID of the project for which members needs to be retrieved",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "ID of the user that needs to be added to project",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "description": "Role of the user in the poject",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Member Added",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/ProjectMember"
+                },
+                {
+                  "$ref": "#/definitions/Created"
+                }
+              ]
+            }
+          },
+          "400": {
+            "description": "Invalid parameters supplied",
+            "schema": {
+              "$ref": "#/definitions/Invalid"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Deletes member from a project",
+        "description": "Delete a member from a project",
+        "operationId": "deleteMember",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "query",
+            "description": "ID of the project for which members needs to be removed from",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "ID of the user that needs to be removed to project",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/OK"
+                }
+              ]
+            }
+          },
+          "404": {
+            "description": "Member not found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          }
+        }
+      }
+    },
+    "/task": {
+      "get": {
+        "tags": [
+          "task"
+        ],
+        "summary": "Returns task",
+        "description": "Returns specific",
+        "operationId": "returnTask",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "query",
+            "description": "ID of the task that needs to be retrieved",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Task"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "links": {
+                      "type": "array",
+                      "description": "HATEOAS",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "href": {
+                            "type": "string",
+                            "description": "hypertext reference"
+                          },
+                          "rel": {
+                            "type": "string",
+                            "description": "relation"
+                          }
+                        }
+                      },
+                      "example": [
+                        {
+                          "href": "/task",
+                          "rel": "task"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "$ref": "#/definitions/OK"
+                }
+              ]
+            }
+          },
+          "404": {
+            "description": "No Task found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "task"
+        ],
+        "summary": "Create new task",
+        "description": "This endpoint is used to create new task",
+        "operationId": "createTask",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "task object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Task"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Task Created",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Task"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "links": {
+                      "type": "array",
+                      "description": "HATEOAS",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "href": {
+                            "type": "string",
+                            "description": "hypertext reference"
+                          },
+                          "rel": {
+                            "type": "string",
+                            "description": "relation"
+                          }
+                        }
+                      },
+                      "example": [
+                        {
+                          "href": "/task",
+                          "rel": "task"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "$ref": "#/definitions/Created"
+                }
+              ]
+            }
+          },
+          "400": {
+            "description": "Invalid parameters supplied",
+            "schema": {
+              "$ref": "#/definitions/Invalid"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "task"
+        ],
+        "summary": "Update task",
+        "description": "Update existing task",
+        "operationId": "updateTask",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "query",
+            "description": "ID of the request that needs to be updated",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "task object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Task"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "request successfully created",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Request"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "links": {
+                      "type": "array",
+                      "description": "HATEOAS",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "href": {
+                            "type": "string",
+                            "description": "hypertext reference"
+                          },
+                          "rel": {
+                            "type": "string",
+                            "description": "relation"
+                          }
+                        },
+                        "example": [
+                          {
+                            "href": "/search",
+                            "rel": "search"
+                          },
+                          {
+                            "href": "/message/12",
+                            "rel": "message"
+                          },
+                          {
+                            "href": "/block/12",
+                            "rel": "block"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "$ref": "#/definitions/OK"
+                }
+              ]
+            }
+          },
+          "405": {
+            "description": "request unsuccessful as user is already added",
+            "schema": {
+              "$ref": "#/definitions/NotAllowed"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "task"
+        ],
+        "summary": "Deletes task",
+        "description": "Deletes a specific task",
+        "operationId": "deletesTask",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "query",
+            "description": "ID of the task that needs to be deleted",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/OK"
+                }
+              ]
+            }
+          },
+          "404": {
+            "description": "No Task found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          }
+        }
+      }
+    },
+    "/task/delete": {
+      "put": {
+        "tags": [
+          "task"
+        ],
+        "summary": "Delete task",
+        "description": "This endpoint is used to delete an existing task",
+        "operationId": "deleteTask",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "query",
+            "description": "ID of the task that needs to be deleted",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task Deleted",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/OK"
+                }
+              ]
+            }
+          },
+          "400": {
+            "description": "Invalid parameters supplied",
+            "schema": {
+              "$ref": "#/definitions/Invalid"
+            }
+          }
+        }
+      }
+    },
+    "/task/getall": {
+      "get": {
+        "tags": [
+          "task"
+        ],
+        "summary": "Returns all task",
+        "description": "Returns all tasks for a specific user or project",
+        "operationId": "returnAllTasks",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "ID of the user whose tasks we want to fetch",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "projectId",
+            "in": "query",
+            "description": "ID of the project we want to fetch tasks from",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ArrayOfTasks"
+            }
+          },
+          "404": {
+            "description": "No Task found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          }
+        }
+      }
+    },
+    "/task/gethistory": {
+      "get": {
+        "tags": [
+          "task"
+        ],
+        "summary": "Returns history for a task",
+        "description": "Returns full edit history for a task",
+        "operationId": "returnTaskHistory",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "query",
+            "description": "ID of the task we want to fetch history for",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ArrayOfTasks"
+            }
+          },
+          "404": {
+            "description": "No Task found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          }
+        }
+      }
+    },
+    "/taskcomment": {
+      "get": {
+        "tags": [
+          "taskcomment"
+        ],
+        "summary": "Returns all comments for a task",
+        "description": "Returns a list of all comments for a given task id",
+        "operationId": "returnTaskComments",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "query",
+            "description": "ID of the task for which comments are to be retrieved",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ArrayOfTaskComments"
+            }
+          },
+          "404": {
+            "description": "No Task Comments found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "taskcomment"
+        ],
+        "summary": "Create new task comment",
+        "description": "This endpoint is used to create new task comment",
+        "operationId": "createTaskComment",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "task comment object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TaskComment"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Task Comment Created",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/TaskComment"
+                },
+                {
+                  "$ref": "#/definitions/Created"
+                }
+              ]
+            }
+          },
+          "400": {
+            "description": "Invalid parameters supplied",
+            "schema": {
+              "$ref": "#/definitions/Invalid"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "taskcomment"
+        ],
+        "summary": "Update task comment",
+        "description": "Update existing task comment",
+        "operationId": "updateTaskComment",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "task comment object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TaskComment"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "request successfully created",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Request"
+                },
+                {
+                  "$ref": "#/definitions/OK"
+                }
+              ]
+            }
+          },
+          "405": {
+            "description": "request unsuccessful as user is already added",
+            "schema": {
+              "$ref": "#/definitions/NotAllowed"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "taskcomment"
+        ],
+        "summary": "Deletes task comment",
+        "description": "Deletes a specific task comment",
+        "operationId": "deletesTaskComment",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "query",
+            "description": "ID of the task that needs to be deleted",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "commentId",
+            "in": "query",
+            "description": "ID of the task comment that needs to be deleted",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/OK"
+                }
+              ]
+            }
+          },
+          "404": {
+            "description": "No Task found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          }
+        }
+      }
+    },
+    "/project": {
+      "get": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Returns project",
+        "description": "Returns specific project",
+        "operationId": "returnProject",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "query",
+            "description": "ID of the project that needs to be retrieved",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Project"
+                },
+                {
+                  "$ref": "#/definitions/OK"
+                }
+              ]
+            }
+          },
+          "404": {
+            "description": "No Project found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Create new project",
+        "description": "This endpoint is used to create new project",
+        "operationId": "createProject",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "task object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Project"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Project Created",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Project"
+                },
+                {
+                  "$ref": "#/definitions/Created"
+                }
+              ]
+            }
+          },
+          "400": {
+            "description": "Invalid parameters supplied",
+            "schema": {
+              "$ref": "#/definitions/Invalid"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Update project",
+        "description": "Update existing project",
+        "operationId": "updateProject",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "query",
+            "description": "ID of the request that needs to be updated",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "project object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Project"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "request successfully created",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Request"
+                },
+                {
+                  "$ref": "#/definitions/OK"
+                }
+              ]
+            }
+          },
+          "405": {
+            "description": "request unsuccessful as project already exists",
+            "schema": {
+              "$ref": "#/definitions/NotAllowed"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Deletes project",
+        "description": "Deletes a specific project",
+        "operationId": "deleteProject",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "query",
+            "description": "ID of the project that needs to be deleted",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/OK"
+                }
+              ]
+            }
+          },
+          "404": {
+            "description": "No project found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          }
+        }
+      }
+    },
+    "/project/getall": {
+      "get": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Returns all project",
+        "description": "Returns all projects for a specific user or project",
+        "operationId": "returnAllProjects",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "ID of the user whose projects we want to fetch",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ArrayOfProjects"
+            }
+          },
+          "404": {
+            "description": "No Project found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          }
+        }
+      }
+    },
+    "/capacity": {
+      "put": {
+        "tags": [
+          "workload"
+        ],
+        "summary": "Update capacity",
+        "description": "Update user capacity",
+        "operationId": "updateCapacity",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "ID of the user that needs to be updated",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "capacity",
+            "in": "query",
+            "description": "Capacity to set for the user",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "request successfully created",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/User"
+                },
+                {
+                  "$ref": "#/definitions/OK"
+                }
+              ]
+            }
+          },
+          "405": {
+            "description": "request unsuccessful",
+            "schema": {
+              "$ref": "#/definitions/NotAllowed"
+            }
+          }
+        }
+      }
+    },
+    "/workload": {
+      "get": {
+        "tags": [
+          "workload"
+        ],
+        "summary": "Returns workload",
+        "description": "Returns workload percentage for a user",
+        "operationId": "returnWorkload",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "ID of the user that needs to be updated",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "workload": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                },
+                {
+                  "$ref": "#/definitions/OK"
+                }
+              ]
+            }
+          },
+          "404": {
+            "description": "Error! Not Found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "capacity": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "Token": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "capacity": {
+          "type": "integer"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "Request": {
+      "type": "object",
+      "properties": {
+        "requestId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "requestTo": {
+          "type": "string"
+        },
+        "requestFrom": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "description": "connection request status",
+          "enum": [
+            "approved",
+            "pending",
+            "ignore"
+          ]
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        }
+      }
+    },
+    "ArrayOfRequests": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Request"
+      }
+    },
+    "Task": {
+      "type": "object",
+      "properties": {
+        "taskId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "projectId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "title": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "createdBy": {
+          "type": "integer"
+        },
+        "assignedTo": {
+          "type": "integer"
+        },
+        "dueDate": {
+          "type": "string"
+        },
+        "createdTime": {
+          "type": "string"
+        },
+        "updatedTime": {
+          "type": "string"
+        },
+        "effort": {
+          "type": "integer"
+        }
+      }
+    },
+    "ArrayOfTasks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Task"
+      }
+    },
+    "TaskComment": {
+      "type": "object",
+      "properties": {
+        "commentId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "taskId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "commentText": {
+          "type": "string"
+        },
+        "commentBy": {
+          "type": "string"
+        }
+      }
+    },
+    "ArrayOfTaskComments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TaskComment"
+      }
+    },
+    "Connection": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "connectedUserId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "emailAddress": {
+          "type": "string"
+        }
+      }
+    },
+    "ArrayOfConnections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Connection"
+      }
+    },
+    "ProjectMember": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "userId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "role": {
+          "type": "string"
+        },
+        "projectName": {
+          "type": "string"
+        },
+        "projectDescription": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "integer"
+        },
+        "lastName": {
+          "type": "integer"
+        },
+        "emailAddress": {
+          "type": "string"
+        },
+        "capacity": {
+          "type": "integer"
+        }
+      }
+    },
+    "Project": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "projectName": {
+          "type": "string"
+        },
+        "projectDescription": {
+          "type": "string"
+        },
+        "projectOwner": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "createdTime": {
+          "type": "string"
+        }
+      }
+    },
+    "ArrayOfProjects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Project"
+      }
+    },
+    "ArrayOfProjectMembers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ProjectMember"
+      }
+    },
+    "Created": {
+      "type": "object",
+      "properties": {
+        "api_response": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "integer",
+              "format": "int32",
+              "example": 201,
+              "description": "HTTP status code"
+            },
+            "message": {
+              "type": "string",
+              "example": "Success! Created",
+              "description": "status description"
+            }
+          }
+        }
+      }
+    },
+    "OK": {
+      "type": "object",
+      "properties": {
+        "api_response": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "integer",
+              "format": "int32",
+              "example": 200,
+              "description": "HTTP status code"
+            },
+            "message": {
+              "type": "string",
+              "example": "OK",
+              "description": "status description"
+            }
+          }
+        }
+      }
+    },
+    "Invalid": {
+      "type": "object",
+      "properties": {
+        "api_response": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "integer",
+              "format": "int32",
+              "example": 400,
+              "description": "HTTP status code"
+            },
+            "message": {
+              "type": "string",
+              "example": "Error! Invalid",
+              "description": "Custom message"
+            }
+          }
+        }
+      }
+    },
+    "NotFound": {
+      "type": "object",
+      "properties": {
+        "api_response": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "integer",
+              "format": "int32",
+              "example": 404,
+              "description": "HTTP status code"
+            },
+            "message": {
+              "type": "string",
+              "example": "Error! Not Found",
+              "description": "status description"
+            }
+          }
+        }
+      }
+    },
+    "NotAllowed": {
+      "type": "object",
+      "properties": {
+        "api_response": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "integer",
+              "format": "int32",
+              "example": 405,
+              "description": "HTTP status code"
+            },
+            "message": {
+              "type": "string",
+              "example": "Error! Not Allowed",
+              "description": "status description"
+            }
+          }
+        }
+      }
+    }
+  }
+}
