@@ -1,6 +1,6 @@
 ![Peera2](https://user-images.githubusercontent.com/22726975/202676991-4bb50306-bd20-4f00-8a02-f29413c6e3c2.png)
 
-# Peera - itworkedb4
+# Peera - itworkedb4 - task management
 
 - Anshul Bindal, z5227560
 - Thomas Davie, z5263970 
