@@ -79,5 +79,35 @@
 
 # UI showcase
 
+1. home
 
+![home](https://github.com/Zhou13-zy/peera_UniProject/blob/main/docs/home.png)
+
+2. register
+
+![register](https://github.com/Zhou13-zy/peera_UniProject/blob/main/docs/register.png)
+
+3. login
+
+![login](https://github.com/Zhou13-zy/peera_UniProject/blob/main/docs/login.png)
+
+4. user profile
+
+![userProfile](https://github.com/Zhou13-zy/peera_UniProject/blob/main/docs/user_profile.png)
+
+5. search
+
+![search](https://github.com/Zhou13-zy/peera_UniProject/blob/main/docs/search_user.png)
+
+6. connected user profile
+
+![connectedUserProfile](https://github.com/Zhou13-zy/peera_UniProject/blob/main/docs/connected_user_profile.png)
+
+7. project dashboard
+
+![projectDashboard](https://github.com/Zhou13-zy/peera_UniProject/blob/main/docs/project_dashboard.png)
+
+8. task detail
+
+![taskDetail](https://github.com/Zhou13-zy/peera_UniProject/blob/main/docs/task_detail.png)
 
