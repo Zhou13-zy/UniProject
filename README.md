@@ -76,3 +76,8 @@
     ```$ npm start```
 
 #### Peera is now running! Head to http://127.0.0.1:3000 to begin. 
+
+# UI showcase
+
+
+
