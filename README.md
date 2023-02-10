@@ -5,7 +5,7 @@
 - Anshul Bindal, z5227560
 - Thomas Davie, z5263970 
 - Zainal Ahamath, z5224747
-- Zeyu Hou, z5190728 
+- Zeyu Hou, z5190728 - entire work for frontend
 
 # Installation Guide 
 
